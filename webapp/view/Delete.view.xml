@@ -1,0 +1,17 @@
+<mvc:View
+	controllerName="opensap.manageproducts.controller.Delete"
+	xmlns:mvc="sap.ui.core.mvc"
+	xmlns:semantic="sap.m.semantic"
+	xmlns:smartfield="sap.ui.comp.smartfield"
+	xmlns:smartform="sap.ui.comp.smartform"
+	xmlns="sap.m">
+	<semantic:FullscreenPage
+		id="page"
+		title="{i18n>delPageTitle}"
+		showNavButton="true"
+		navButtonPress="onNavBack">
+		<semantic:content>
+			
+		</semantic:content>
+	</semantic:FullscreenPage>
+</mvc:View>

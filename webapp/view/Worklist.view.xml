@@ -1,0 +1,145 @@
+<mvc:View
+	controllerName="opensap.manageproducts.controller.Worklist"
+	xmlns="sap.m"
+	xmlns:mvc="sap.ui.core.mvc"
+	xmlns:semantic="sap.m.semantic"
+	xmlns:l="sap.ui.layout">
+
+	<semantic:FullscreenPage
+		id="page"
+		navButtonPress="onNavBack"
+		showNavButton="true"
+		title="{i18n>worklistViewTitle}">
+		<semantic:content>
+			<!--we expand the scope of products set in the data binding on the items aggregation (items=...)-->
+			<!--to extend to puduct supplier web address by adding the parameters - expand toSupplier  -->
+				<IconTabBar
+					id="idIconTabBar"
+					select="onQuickFilter"
+					expandable="false"
+					applyContentPadding="false">
+
+					<items>
+						<IconTabFilter
+							showAll="true"
+							count="{i18n>All}"
+							text="{i18n>Products}"
+							key="All" />
+						<IconTabSeparator />
+						<IconTabFilter
+							icon="sap-icon://loan"
+							iconColor="Positive"
+							count="{worklistView>/cheap}"
+							text="{i18n>Cheap}"
+							key="cheap" />
+						<IconTabFilter
+							icon="sap-icon://waiver"
+							iconColor="Critical"
+							count="{worklistView>/moderate}"
+							text="{i18n>Moderate}"
+							key="moderate" />
+						<IconTabFilter
+							icon="sap-icon://money-bills"
+							iconColor="Negative"
+							count="{worklistView>/expensive}"
+							text="{i18n>Expensive}"
+							key="expensive" />
+					</items>
+						<content>
+							<Table
+								id="table"
+								width="auto"
+								items="{
+									path: '/ProductSet',
+									sorter: {
+										path: 'ProductID',
+										descending: false
+									},
+									parameters: {
+										expand: 'ToSupplier'
+									}
+				
+								}"
+								noDataText="{worklistView>/tableNoDataText}"
+								busyIndicatorDelay="{worklistView>/tableBusyDelay}"
+								growing="true"
+								growingScrollToLoad="true"
+								updateFinished="onUpdateFinished">
+			
+								<headerToolbar>
+									<Toolbar>
+										<Title id="tableHeader" text="{worklistView>/worklistTableTitle}"/>
+										<ToolbarSpacer />
+										<SearchField
+											id="searchField"
+											tooltip="{i18n>worklistSearchTooltip}"
+											search="onSearch"
+											width="auto">
+										</SearchField>
+										<Button id="addButton" icon="sap-icon://add" press="onAdd" />
+									</Toolbar>
+								</headerToolbar>
+			
+								<columns>
+									<Column id="nameColumn">
+										<Text text="{i18n>tableNameColumnTitle}" id="nameColumnTitle"/>
+									</Column>
+									<!--here comes the responsive property - column in PC, 
+									tablet mode = pop-in (demandPopin) when there is a minscreen -->
+									<Column 
+										id="supplierNameColumn"
+										demandPopin="true"
+										minScreenWidth="Tablet">
+										<Text text="{i18n>tableSupplierColumnTitle}"/>
+									</Column>
+									<!-- here demandPopin is false, so he completely hide this column
+									in small screens-->
+									<Column id="webAddressColumn"
+										demandPopin="false"
+										minScreenWidth="Tablet">
+										<Text text="{i18n>tableSupplierWebAddressColumnTitle}"/>
+									</Column>
+									<Column id="unitNumberColumn" hAlign="End">
+										<Text text="{i18n>tableUnitNumberColumnTitle}" id="unitNumberColumnTitle"/>
+									</Column>
+									<Column id="Action" hAlign="End">
+										<Text text="Action" id="unitActionTitle"/>
+									</Column>
+								</columns>
+			
+								<items>
+									<ColumnListItem
+										type="Navigation"
+										press="onPress">
+										<cells>
+											<ObjectIdentifier
+												title="{ProductID}"
+												text="{Name}\n{Category}"
+												titleActive="true" 
+												titlePress="onShowDetailPopover"/>
+												<Text text="{SupplierName}"/>
+												<Link
+													text="{ToSupplier/WebAddress}"
+													href="{ToSupplier/WebAddress}"
+													target="_blank"/>
+											<ObjectNumber
+												number="{
+													path: 'Price',
+													formatter: '.formatter.numberUnit'
+												}"
+												unit="{CurrencyCode}"/>
+												
+											<Button id="delete" icon="sap-icon://delete" press="onDelete"  />
+											
+										</cells>
+									</ColumnListItem>
+								</items>
+							</Table>
+						</content>
+					</IconTabBar>
+				</semantic:content>
+			<semantic:sendEmailAction>
+			<semantic:SendEmailAction id="shareEmail" press="onShareEmailPress"/>
+		</semantic:sendEmailAction>
+	</semantic:FullscreenPage>
+</mvc:View>
